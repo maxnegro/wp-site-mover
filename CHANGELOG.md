@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.0.0] - 2026-07-23
-### Added
+
 - Initial release.
 - Chunked database export and ZIP archive builder.
 - Standalone `site-installer.php` with 5-step wizard.
