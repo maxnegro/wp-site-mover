@@ -1,9 +1,9 @@
 === WP SiteMover ===
-Contributors: (your WordPress.org username)
+Contributors: @maxnegro
 Tags: backup, migration, clone, website, restore
 Requires at least: 5.2
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 7.2
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,23 +78,35 @@ Yes. WP SiteMover implements a recursive serialized data engine that safely repl
 
 For security, the installer and archive files can be automatically removed after successful completion. We recommend deleting them from the destination server once the migration is verified.
 
-== Screenshots ==
-
-1. Admin dashboard with package creation wizard and progress tracking.
-2. Package management list with download actions for ZIP and installer.
-3. Standalone installer step-by-step interface (requirements, database, extraction, configuration, completion).
-
 == Changelog ==
 
+= 1.0.1 =
+
+- docs(changelog): rimuovere intestazione Added superflua in release 1.0.0 (33ddfbc)
+- Fix sync-readme-changelog: extract all versions from CHANGELOG.md (caf573a)
+- Fix readme sync: avoid duplicating Upgrade Notice section (d134951)
+- docs(readme): aggiornare contributor e versione WordPress testata (8669a01)
+- fix(git-hooks): prevenire duplicazione nella sezione Upgrade Notice (4a826a8)
+- Fix sync-readme-changelog: prevent duplication and escape issues (feee6bf)
+- Add git-flow hooks and project files (302b05c)
+- chore(i18n): aggiungere .gitignore ed eliminare file .mo di traduzione compilati (f7a5ae5)
+- Rename plugin to WP SiteMover and add i18n support (dedd006)
+- style(admin): sostituire 'Zippatura' con 'Compressione' nel messaggio di avanzamento (7e4cbfe)
+
 = 1.0.0 =
-* Initial release.
-* Chunked database export and ZIP archive builder.
-* Standalone `site-installer.php` with 5-step wizard.
-* Deep serialized search and replace engine.
-* Admin dashboard with AJAX progress tracking.
-* Internationalization (i18n) support with Italian and English translations.
+
+- Initial release.
+- Chunked database export and ZIP archive builder.
+- Standalone `site-installer.php` with 5-step wizard.
+- Deep serialized search and replace engine.
+- Admin dashboard with AJAX progress tracking.
+- Internationalization (i18n) support with Italian and English translations.
 
 == Upgrade Notice ==
 
+= 1.0.1 =
+Some cleaning up
+
 = 1.0.0 =
 First stable release.
+

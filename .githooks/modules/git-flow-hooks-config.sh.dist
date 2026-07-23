@@ -1,0 +1,7 @@
+VERSION_FILE="VERSION"
+CHANGELOG_FILE="CHANGELOG.md"
+VERSION_BUMPLEVEL_HOTFIX="PATCH"
+VERSION_BUMPLEVEL_RELEASE="MINOR"
+VERSION_SORT="sort -V"
+VERSION_TAG_PLACEHOLDER="%tag%"
+CHANGELOG_TODO_MARKER="TODO: Rivedi e completa questa sezione, poi committala prima di eseguire release/hotfix finish."
