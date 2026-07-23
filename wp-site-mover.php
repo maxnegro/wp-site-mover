@@ -3,7 +3,7 @@
  * Plugin Name:       WP SiteMover - Backup, Migration & Site Cloning
  * Plugin URI:        https://wordpress.org/plugins/wp-site-mover/
  * Description:       High-performance WordPress backup, zero-downtime migration, and site cloning plugin. Supports large sites (20GB+) and large files (1GB+). Includes an independent standalone installer for clean hosting.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Massimiliano Masserelli
  * Author URI:        https://github.com/maxnegro/
  * License:           GPL-2.0+
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('SITEMOVER_VERSION', '1.0.0');
+define('SITEMOVER_VERSION', '1.0.1');
 define('SITEMOVER_FILE', __FILE__);
 define('SITEMOVER_PATH', plugin_dir_path(__FILE__));
 define('SITEMOVER_URL', plugin_dir_url(__FILE__));
