@@ -71,18 +71,34 @@ awk -v changelog_marker="== Changelog ==" '
     found_next { print }
 ' "$README_PATH" > "$TMP_AFTER"
 
-# Build new Upgrade Notice section: new version first, then existing ones
+# Build new Upgrade Notice section: new version first, deduplicated, then existing ones
 UPGRADE_ENTRY="= ${VERSION_NAME} =
 TODO: write upgrade notice for ${VERSION_NAME}."
+
 UPGRADE_SECTION="$UPGRADE_ENTRY"
 
 if [ -s "$TMP_UPGRADE" ]; then
-    UPGRADE_SECTION="${UPGRADE_SECTION}
+    EXISTING=$(cat "$TMP_UPGRADE")
+    # Remove any existing entry for the current version to avoid duplication
+    FILTERED=$(printf '%s\n' "$EXISTING" | awk -v ver="$VERSION_NAME" '
+        BEGIN { skip=0 }
+        /^= / {
+            ver_line=$0
+            sub(/^= | =$/, "", ver_line)
+            if (ver_line == ver) { skip=1; next }
+            else { skip=0 }
+        }
+        skip { next }
+        { print }
+    ')
+    if [ -n "$FILTERED" ]; then
+        UPGRADE_SECTION="${UPGRADE_SECTION}
 
-$(cat "$TMP_UPGRADE")"
+${FILTERED}"
+    fi
 fi
 
-# Remove trailing empty lines from upgrade section
+# Normalize blank lines in upgrade section
 UPGRADE_SECTION=$(printf '%s\n' "$UPGRADE_SECTION" | sed '/^$/N;/^\n$/D')
 
 {
