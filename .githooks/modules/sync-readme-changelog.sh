@@ -22,17 +22,22 @@ if [ ! -f "$README_PATH" ]; then
     return 1
 fi
 
-# Extract ONLY the current version section from CHANGELOG.md
-CHANGELOG_SECTION=$(awk -v ver="$VERSION_NAME" '
+# Convert entire CHANGELOG.md to readme.txt changelog format
+CHANGELOG_SECTION=$(awk '
     BEGIN { in_section=0; buf="" }
     /^## \[/ {
-        if (in_section) { exit }
-        if (index($0, "## [" ver "]") == 1) {
-            in_section=1
-            sub(/^## \[[^\]]+\] - .*/, "= " ver " =")
-            buf = buf $0 "\n"
-            next
-        }
+        in_section=1
+        ver = $0
+        sub(/^## \[/, "", ver)
+        sub(/\].*/, "", ver)
+        $0 = "= " ver " ="
+        buf = buf $0 "\n"
+        next
+    }
+    in_section && /^### / {
+        sub(/^### /, "* ")
+        buf = buf $0 "\n"
+        next
     }
     in_section { buf = buf $0 "\n" }
     END { print buf }
