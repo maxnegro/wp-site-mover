@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name:       SiteMover - Backup, Migration & Site Cloning
- * Plugin URI:        https://wordpress.org/plugins/site-mover/
+ * Plugin Name:       WP SiteMover - Backup, Migration & Site Cloning
+ * Plugin URI:        https://wordpress.org/plugins/wp-site-mover/
  * Description:       High-performance WordPress backup, zero-downtime migration, and site cloning plugin. Supports large sites (20GB+) and large files (1GB+). Includes an independent standalone installer for clean hosting.
  * Version:           1.0.0
- * Author:            SiteMover Team
- * Author URI:        https://sitemover.io
+ * Author:            Massimiliano Masserelli
+ * Author URI:        https://github.com/maxnegro/
  * License:           GPL-2.0+
- * Text Domain:       site-mover
+ * Text Domain:       wp-site-mover
  * Domain Path:       /languages
  */
 
@@ -43,6 +43,10 @@ function run_site_mover() {
 register_activation_hook(__FILE__, array('SiteMover_Package_Manager', 'init_storage_dir'));
 register_deactivation_hook(__FILE__, function() {
     // Flush rewrite rules or temporary states if needed
+});
+
+add_action('plugins_loaded', function() {
+    load_plugin_textdomain('wp-site-mover', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 });
 
 run_site_mover();

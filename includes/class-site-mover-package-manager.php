@@ -105,7 +105,7 @@ class SiteMover_Package_Manager {
 
             if ($manifest) {
                 $zip_file = $dir . '/' . $manifest['archive_filename'];
-                $installer_file = $dir . '/installer.php';
+                $installer_file = $dir . '/site-installer.php';
 
                 $packages[] = array(
                     'package_id'       => $package_id,

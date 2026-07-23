@@ -1,0 +1,535 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-23T16:45:55+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wp-site-mover\n"
+
+#: includes/class-site-mover-admin.php:24
+msgid "SiteMover Backup & Migration"
+msgstr ""
+
+#: includes/class-site-mover-admin.php:25
+msgid "SiteMover"
+msgstr ""
+
+#: includes/class-site-mover-admin.php:51
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:60
+#: includes/class-site-mover-admin.php:335
+msgid "Security check failed. Invalid nonce."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:63
+msgid "Insufficient permissions."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:115
+msgid "Initialization completed. Preparing database dump..."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:130
+msgid "State file missing for package."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:145
+msgid "Database dump completed. Scanning site files..."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:176
+#, php-format
+msgid "Exporting table %s (%d rows)..."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:191
+#: includes/class-site-mover-admin.php:228
+msgid "State file missing."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:213
+#, php-format
+msgid "Found %d files. Starting ZIP archive creation..."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:241
+msgid "Files added to archive. Generating installer..."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:302
+msgid "Package created successfully! Ready for migration/backup."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:316
+msgid "Package deleted successfully."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:318
+msgid "Unable to delete package."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:327
+msgid "You do not have sufficient permissions to download this file."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:340
+msgid "Package not found."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:354
+msgid "Invalid file type."
+msgstr ""
+
+#: includes/class-site-mover-admin.php:358
+msgid "File not found on server."
+msgstr ""
+
+#: templates/admin-page.php:14
+msgid "Zero-Downtime Backup, Migration and Cloning for WordPress"
+msgstr ""
+
+#: templates/admin-page.php:24
+msgid "Create New Package"
+msgstr ""
+
+#: templates/admin-page.php:25
+msgid "Generate a standalone ZIP archive with files, database, and installer.php script"
+msgstr ""
+
+#: templates/admin-page.php:32
+msgid "Source Site:"
+msgstr ""
+
+#: templates/admin-page.php:36
+msgid "WP Version:"
+msgstr ""
+
+#: templates/admin-page.php:41
+msgid "Start Package Creation"
+msgstr ""
+
+#: templates/admin-page.php:50
+msgid "Initialization"
+msgstr ""
+
+#: templates/admin-page.php:54
+msgid "Database Dump"
+msgstr ""
+
+#: templates/admin-page.php:58
+msgid "File Scan"
+msgstr ""
+
+#: templates/admin-page.php:62
+msgid "ZIP Compression"
+msgstr ""
+
+#: templates/admin-page.php:66
+#: templates/admin-page.php:153
+msgid "Installer"
+msgstr ""
+
+#: templates/admin-page.php:75
+msgid "Initialization in progress..."
+msgstr ""
+
+#: templates/admin-page.php:86
+msgid "How to Migrate to a New Server"
+msgstr ""
+
+#: templates/admin-page.php:91
+msgid "Create the package:"
+msgstr ""
+
+#: templates/admin-page.php:91
+msgid "Click on \"Start Package Creation\" and wait for the process to complete."
+msgstr ""
+
+#: templates/admin-page.php:94
+msgid "Download the two files:"
+msgstr ""
+
+#: templates/admin-page.php:94
+msgid "Download the ZIP archive (`archive_pkg_....zip`) and the `installer.php` file."
+msgstr ""
+
+#: templates/admin-page.php:97
+msgid "Upload to the target hosting:"
+msgstr ""
+
+#: templates/admin-page.php:97
+msgid "Upload both files to the root of your new server/hosting (also works on empty servers without WordPress)."
+msgstr ""
+
+#: templates/admin-page.php:100
+msgid "Run the installation:"
+msgstr ""
+
+#: templates/admin-page.php:100
+msgid "Open your browser at `https://your-new-domain.com/installer.php` and follow the 5-step guided procedure!"
+msgstr ""
+
+#: templates/admin-page.php:110
+msgid "Existing Packages and Backups"
+msgstr ""
+
+#: templates/admin-page.php:115
+msgid "No packages found. Create your first backup above."
+msgstr ""
+
+#: templates/admin-page.php:121
+msgid "Creation Date"
+msgstr ""
+
+#: templates/admin-page.php:122
+msgid "Package ID"
+msgstr ""
+
+#: templates/admin-page.php:123
+msgid "Site Details"
+msgstr ""
+
+#: templates/admin-page.php:124
+msgid "Archive Size"
+msgstr ""
+
+#: templates/admin-page.php:125
+msgid "Security Key"
+msgstr ""
+
+#: templates/admin-page.php:126
+msgid "Actions"
+msgstr ""
+
+#: templates/admin-page.php:152
+msgid "Download Installer"
+msgstr ""
+
+#: templates/admin-page.php:163
+msgid "Download ZIP Archive"
+msgstr ""
+
+#: templates/admin-page.php:164
+msgid "ZIP"
+msgstr ""
+
+#: templates/installer-template.php:32
+msgid "PHP Version (>= 7.4)"
+msgstr ""
+
+#: templates/installer-template.php:34
+#, php-format
+msgid "Current version: %s"
+msgstr ""
+
+#: templates/installer-template.php:37
+msgid "MySQLi Extension"
+msgstr ""
+
+#: templates/installer-template.php:39
+#: templates/installer-template.php:44
+msgid "Available"
+msgstr ""
+
+#: templates/installer-template.php:39
+#: templates/installer-template.php:44
+msgid "Missing"
+msgstr ""
+
+#: templates/installer-template.php:42
+msgid "ZipArchive / Zlib Extension"
+msgstr ""
+
+#: templates/installer-template.php:47
+msgid "Root Server Write Permissions"
+msgstr ""
+
+#: templates/installer-template.php:49
+msgid "Writable"
+msgstr ""
+
+#: templates/installer-template.php:49
+msgid "Not Writable"
+msgstr ""
+
+#: templates/installer-template.php:57
+#, php-format
+msgid "Archive Presence (%s)"
+msgstr ""
+
+#: templates/installer-template.php:59
+msgid "Found"
+msgstr ""
+
+#: templates/installer-template.php:59
+msgid "Not found in current directory"
+msgstr ""
+
+#: templates/installer-template.php:83
+#, php-format
+msgid "Unable to connect to MySQL: %s"
+msgstr ""
+
+#: templates/installer-template.php:92
+#, php-format
+msgid "Database '%s' not found and cannot be created: %s"
+msgstr ""
+
+#: templates/installer-template.php:97
+msgid "Database connection successful!"
+msgstr ""
+
+#: templates/installer-template.php:104
+msgid "ZIP archive file not found."
+msgstr ""
+
+#: templates/installer-template.php:112
+msgid "Archive extraction completed successfully!"
+msgstr ""
+
+#: templates/installer-template.php:114
+msgid "Unable to open and extract the ZIP file."
+msgstr ""
+
+#: templates/installer-template.php:129
+msgid "Database connection failed."
+msgstr ""
+
+#: templates/installer-template.php:160
+msgid "Database restoration and site configuration completed!"
+msgstr ""
+
+#: templates/installer-template.php:175
+msgid "Cleanup completed. Your new site is ready!"
+msgstr ""
+
+#: templates/installer-template.php:308
+msgid "SiteMover Installer - Restoration & Migration"
+msgstr ""
+
+#: templates/installer-template.php:316
+msgid "SiteMover Standalone Installer"
+msgstr ""
+
+#: templates/installer-template.php:317
+msgid "Guided procedure for site restoration and migration"
+msgstr ""
+
+#: templates/installer-template.php:322
+msgid "1. Requirements"
+msgstr ""
+
+#: templates/installer-template.php:323
+msgid "2. Database"
+msgstr ""
+
+#: templates/installer-template.php:324
+msgid "3. Extraction"
+msgstr ""
+
+#: templates/installer-template.php:325
+msgid "4. Configuration"
+msgstr ""
+
+#: templates/installer-template.php:326
+msgid "5. Completed"
+msgstr ""
+
+#: templates/installer-template.php:332
+msgid "1. System Requirements Check"
+msgstr ""
+
+#: templates/installer-template.php:333
+msgid "Analysis of the target hosting configuration to ensure proper operation:"
+msgstr ""
+
+#: templates/installer-template.php:335
+msgid "Checking requirements in progress..."
+msgstr ""
+
+#: templates/installer-template.php:338
+msgid "Next: Database Configuration"
+msgstr ""
+
+#: templates/installer-template.php:344
+msgid "2. Database Configuration"
+msgstr ""
+
+#: templates/installer-template.php:345
+msgid "Enter the database connection details of your new hosting:"
+msgstr ""
+
+#: templates/installer-template.php:348
+msgid "Database Host:"
+msgstr ""
+
+#: templates/installer-template.php:352
+msgid "Database Name:"
+msgstr ""
+
+#: templates/installer-template.php:353
+msgid "e.g. my_new_wp_db"
+msgstr ""
+
+#: templates/installer-template.php:356
+msgid "Database User:"
+msgstr ""
+
+#: templates/installer-template.php:357
+msgid "e.g. db_user"
+msgstr ""
+
+#: templates/installer-template.php:360
+msgid "Database Password:"
+msgstr ""
+
+#: templates/installer-template.php:361
+msgid "MySQL Password"
+msgstr ""
+
+#: templates/installer-template.php:364
+msgid "Original Table Prefix:"
+msgstr ""
+
+#: templates/installer-template.php:370
+msgid "Test DB Connection"
+msgstr ""
+
+#: templates/installer-template.php:371
+msgid "Next: Extract Files"
+msgstr ""
+
+#: templates/installer-template.php:377
+msgid "3. Site Archive Extraction"
+msgstr ""
+
+#: templates/installer-template.php:378
+#, php-format
+msgid "Extracting files from archive %s..."
+msgstr ""
+
+#: templates/installer-template.php:382
+msgid "Waiting to start..."
+msgstr ""
+
+#: templates/installer-template.php:384
+msgid "Start File Extraction"
+msgstr ""
+
+#: templates/installer-template.php:390
+msgid "4. DB Restoration & URL Configuration"
+msgstr ""
+
+#: templates/installer-template.php:391
+msgid "Verify the new site URL for automatic database update:"
+msgstr ""
+
+#: templates/installer-template.php:393
+msgid "Old Site URL (Source):"
+msgstr ""
+
+#: templates/installer-template.php:397
+msgid "New Site URL (Destination):"
+msgstr ""
+
+#: templates/installer-template.php:402
+msgid "Execute DB Restoration & URL Replacement"
+msgstr ""
+
+#: templates/installer-template.php:408
+msgid "5. Migration Completed!"
+msgstr ""
+
+#: templates/installer-template.php:409
+msgid "Your WordPress site has been successfully restored!"
+msgstr ""
+
+#: templates/installer-template.php:411
+msgid "Click the button below to delete temporary installation files for security."
+msgstr ""
+
+#: templates/installer-template.php:414
+msgid "Complete & Clean Installer Files"
+msgstr ""
+
+#: assets/js/admin.js:51
+msgid "Initialization backup session..."
+msgstr ""
+
+#: assets/js/admin.js:59
+msgid "Error: "
+msgstr ""
+
+#: assets/js/admin.js:59
+msgid "Initialization failed"
+msgstr ""
+
+#: assets/js/admin.js:66
+#, js-format
+msgid "Package created (%s). Starting DB dump..."
+msgstr ""
+
+#: assets/js/admin.js:81
+msgid "Database Dump Error: "
+msgstr ""
+
+#: assets/js/admin.js:106
+msgid "File Scan Error: "
+msgstr ""
+
+#: assets/js/admin.js:126
+msgid "ZIP Archiving Error: "
+msgstr ""
+
+#: assets/js/admin.js:151
+msgid "Finalization Error: "
+msgstr ""
+
+#: assets/js/admin.js:169
+#, js-format
+msgid "Are you sure you want to delete package %s?"
+msgstr ""
+
+#: assets/js/installer.js:40
+msgid "PASS"
+msgstr ""
+
+#: assets/js/installer.js:40
+msgid "FAIL"
+msgstr ""
+
+#: assets/js/installer.js:51
+msgid "Error during requirements verification."
+msgstr ""
+
+#: assets/js/installer.js:63
+msgid "Verifying database connection in progress..."
+msgstr ""
+
+#: assets/js/installer.js:90
+msgid "Connection error."
+msgstr ""
+
+#: assets/js/installer.js:108
+msgid "Extracting files in progress... Please wait..."
+msgstr ""
+
+#: assets/js/installer.js:134
+msgid "Error during archive extraction."
+msgstr ""
+
+#: assets/js/installer.js:146
+msgid "Importing database and replacing URLs in progress..."
+msgstr ""
+
+#: assets/js/installer.js:178
+msgid "Error during database restoration."
+msgstr ""

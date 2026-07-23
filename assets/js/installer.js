@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    function __(text, domain) {
+        if (typeof wp !== 'undefined' && wp.i18n && wp.i18n.__) {
+            return wp.i18n.__(text, domain || 'wp-site-mover');
+        }
+        return text;
+    }
     
     function switchPanel(fromStep, toStep) {
         document.getElementById('panel-step-' + fromStep).classList.remove('active');
@@ -10,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Step 1: Run System Requirements Check automatically
-    fetch('installer.php', {
+    fetch('site-installer.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'action=check_requirements'
@@ -31,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <small style="color:#64748b">${item.details}</small>
                 </div>
                 <div class="${item.pass ? 'badge-pass' : 'badge-fail'}">
-                    ${item.pass ? 'PASS' : 'FAIL'}
+                    ${item.pass ? __('PASS', 'wp-site-mover') : __('FAIL', 'wp-site-mover')}
                 </div>
             `;
             reqList.appendChild(div);
@@ -42,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
     .catch(err => {
-        document.getElementById('requirements-list').innerHTML = '<div class="msg-box error">Errore durante la verifica dei requisiti.</div>';
+        document.getElementById('requirements-list').innerHTML = '<div class="msg-box error">' + __('Error during requirements verification.', 'wp-site-mover') + '</div>';
     });
 
     // Step 1 -> Step 2
@@ -54,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btn-test-db').addEventListener('click', function() {
         const msgBox = document.getElementById('db-test-msg');
         msgBox.className = 'msg-box';
-        msgBox.innerText = 'Verifica connessione al database in corso...';
+        msgBox.innerText = __('Verifying database connection in progress...', 'wp-site-mover');
 
         const body = new URLSearchParams({
             action: 'test_db',
@@ -64,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             db_pass: document.getElementById('db_pass').value
         });
 
-        fetch('installer.php', {
+        fetch('site-installer.php', {
             method: 'POST',
             body: body
         })
@@ -81,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             msgBox.className = 'msg-box error';
-            msgBox.innerText = 'Errore di connessione.';
+            msgBox.innerText = __('Connection error.', 'wp-site-mover');
         });
     });
 
@@ -99,10 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const progressBar = document.getElementById('unzip-progress');
 
         statusMsg.className = 'msg-box';
-        statusMsg.innerText = 'Estrazione file in corso... Attendere...';
+        statusMsg.innerText = __('Extracting files in progress... Please wait...', 'wp-site-mover');
         progressBar.style.width = '50%';
 
-        fetch('installer.php', {
+        fetch('site-installer.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'action=unzip_archive'
@@ -125,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             statusMsg.className = 'msg-box error';
-            statusMsg.innerText = 'Errore durante l\'estrazione dell\'archivio.';
+            statusMsg.innerText = __('Error during archive extraction.', 'wp-site-mover');
             btn.disabled = false;
         });
     });
@@ -137,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const statusMsg = document.getElementById('import-status-msg');
         statusMsg.className = 'msg-box';
-        statusMsg.innerText = 'Importazione database e sostituzione URL in corso...';
+        statusMsg.innerText = __('Importing database and replacing URLs in progress...', 'wp-site-mover');
 
         const body = new URLSearchParams({
             action: 'import_and_replace',
@@ -148,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             new_url: document.getElementById('new_site_url').value
         });
 
-        fetch('installer.php', {
+        fetch('site-installer.php', {
             method: 'POST',
             body: body
         })
@@ -169,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             statusMsg.className = 'msg-box error';
-            statusMsg.innerText = 'Errore durante il ripristino del database.';
+            statusMsg.innerText = __('Error during database restoration.', 'wp-site-mover');
             btn.disabled = false;
         });
     });
@@ -179,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = this;
         btn.disabled = true;
 
-        fetch('installer.php', {
+        fetch('site-installer.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'action=cleanup'

@@ -21,10 +21,10 @@ class SiteMover_Admin {
 
     public function add_admin_menu() {
         add_menu_page(
-            'SiteMover Backup & Migration',
-            'SiteMover',
+            __('SiteMover Backup & Migration', 'wp-site-mover'),
+            __('SiteMover', 'wp-site-mover'),
             'manage_options',
-            'site-mover',
+            'wp-site-mover',
             array($this, 'render_admin_page'),
             'dashicons-download',
             75
@@ -32,12 +32,13 @@ class SiteMover_Admin {
     }
 
     public function enqueue_assets($hook) {
-        if ($hook !== 'toplevel_page_site-mover') {
+        if ($hook !== 'toplevel_page_wp-site-mover') {
             return;
         }
 
         wp_enqueue_style('sitemover-admin-css', SITEMOVER_URL . 'assets/css/admin.css', array(), SITEMOVER_VERSION);
-        wp_enqueue_script('sitemover-admin-js', SITEMOVER_URL . 'assets/js/admin.js', array('jquery'), SITEMOVER_VERSION, true);
+        wp_enqueue_script('sitemover-admin-js', SITEMOVER_URL . 'assets/js/admin.js', array('jquery', 'wp-i18n'), SITEMOVER_VERSION, true);
+        wp_set_script_translations('sitemover-admin-js', 'wp-site-mover');
 
         wp_localize_script('sitemover-admin-js', 'SiteMoverVars', array(
             'ajax_url' => admin_url('admin-ajax.php'),
@@ -47,7 +48,7 @@ class SiteMover_Admin {
 
     public function render_admin_page() {
         if (!current_user_can('manage_options')) {
-            wp_die(__('Non hai i permessi sufficienti per accedere a questa pagina.'));
+            wp_die(__('You do not have sufficient permissions to access this page.', 'wp-site-mover'));
         }
 
         $packages = SiteMover_Package_Manager::list_packages();
@@ -56,10 +57,10 @@ class SiteMover_Admin {
 
     private function verify_nonce() {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'sitemover_admin_nonce')) {
-            wp_send_json_error(array('message' => 'Security check failed. Nonce invalid.'));
+            wp_send_json_error(array('message' => __('Security check failed. Invalid nonce.', 'wp-site-mover')));
         }
         if (!current_user_can('manage_options')) {
-            wp_send_json_error(array('message' => 'Insufficient permissions.'));
+            wp_send_json_error(array('message' => __('Insufficient permissions.', 'wp-site-mover')));
         }
     }
 
@@ -111,7 +112,7 @@ class SiteMover_Admin {
         wp_send_json_success(array(
             'package_id'   => $package_id,
             'total_tables' => count($tables),
-            'message'      => 'Inizializzazione completata. Preparazione dump database...',
+            'message'      => __('Initialization completed. Preparing database dump...', 'wp-site-mover'),
         ));
     }
 
@@ -126,7 +127,7 @@ class SiteMover_Admin {
         $state_file = $package_dir . '/state.json';
 
         if (!file_exists($state_file)) {
-            wp_send_json_error(array('message' => 'State file missing for package.'));
+            wp_send_json_error(array('message' => __('State file missing for package.', 'wp-site-mover')));
         }
 
         $state = json_decode(file_get_contents($state_file), true);
@@ -140,8 +141,8 @@ class SiteMover_Admin {
             SiteMover_DB_Exporter::write_footer($db_file);
 
             wp_send_json_success(array(
-                'completed' => true,
-                'message'   => 'Dump database completato. Scansione file del sito in corso...',
+            'completed' => true,
+                'message'   => __('Database dump completed. Scanning site files...', 'wp-site-mover'),
             ));
         }
 
@@ -172,7 +173,7 @@ class SiteMover_Admin {
             'table_name'   => $table_name,
             'rows_dumped'  => $res['rows_dumped'],
             'progress_pct' => $progress_pct,
-            'message'      => "Esportazione tabella {$table_name} ({$res['rows_dumped']} righe)...",
+            'message'      => sprintf(__('Exporting table %s (%d rows)...', 'wp-site-mover'), $table_name, $res['rows_dumped']),
         ));
     }
 
@@ -186,14 +187,14 @@ class SiteMover_Admin {
         $package_dir = SiteMover_Package_Manager::get_package_dir($package_id);
         $state_file = $package_dir . '/state.json';
 
-        if (!file_exists($state_file)) {
-            wp_send_json_error(array('message' => 'State file missing.'));
-        }
+            if (!file_exists($state_file)) {
+                wp_send_json_error(array('message' => __('State file missing.', 'wp-site-mover')));
+            }
 
-        $state = json_decode(file_get_contents($state_file), true);
+            $state = json_decode(file_get_contents($state_file), true);
 
-        // Scan files
-        $files = SiteMover_Archive_Builder::scan_files();
+            // Scan files
+            $files = SiteMover_Archive_Builder::scan_files();
         $state['files'] = $files;
         $state['file_index'] = 0;
 
@@ -209,7 +210,7 @@ class SiteMover_Admin {
 
         wp_send_json_success(array(
             'total_files' => count($files),
-            'message'     => "Trovati " . count($files) . " file. Avvio creazione archivio ZIP...",
+            'message'     => sprintf(__('Found %d files. Starting ZIP archive creation...', 'wp-site-mover'), count($files)),
         ));
     }
 
@@ -224,7 +225,7 @@ class SiteMover_Admin {
         $state_file = $package_dir . '/state.json';
 
         if (!file_exists($state_file)) {
-            wp_send_json_error(array('message' => 'State file missing.'));
+            wp_send_json_error(array('message' => __('State file missing.', 'wp-site-mover')));
         }
 
         $state = json_decode(file_get_contents($state_file), true);
@@ -237,7 +238,7 @@ class SiteMover_Admin {
         if (empty($files) || $start_index >= count($files)) {
             wp_send_json_success(array(
                 'completed' => true,
-                'message'   => 'File aggiunti all\'archivio. Generazione installer...',
+                'message'   => __('Files added to archive. Generating installer...', 'wp-site-mover'),
             ));
         }
 
@@ -289,7 +290,7 @@ class SiteMover_Admin {
             SiteMover_Archive_Builder::add_single_file($zip_path, $manifest_file, 'manifest.json');
         }
 
-        // Generate Standalone installer.php
+        // Generate Standalone site-installer.php
         SiteMover_Installer_Generator::create_installer($package_id, $manifest);
 
         // Remove state file
@@ -298,7 +299,7 @@ class SiteMover_Admin {
         wp_send_json_success(array(
             'package_id'  => $package_id,
             'package_key' => $manifest['package_key'],
-            'message'     => 'Pacchetto creato con successo! Pronti per la migrazione/backup.',
+            'message'     => __('Package created successfully! Ready for migration/backup.', 'wp-site-mover'),
         ));
     }
 
@@ -312,9 +313,9 @@ class SiteMover_Admin {
         $res = SiteMover_Package_Manager::delete_package($package_id);
 
         if ($res) {
-            wp_send_json_success(array('message' => 'Pacchetto eliminato con successo.'));
+            wp_send_json_success(array('message' => __('Package deleted successfully.', 'wp-site-mover')));
         } else {
-            wp_send_json_error(array('message' => 'Impossibile eliminare il pacchetto.'));
+            wp_send_json_error(array('message' => __('Unable to delete package.', 'wp-site-mover')));
         }
     }
 
@@ -323,7 +324,7 @@ class SiteMover_Admin {
      */
     public function handle_download_file() {
         if (!current_user_can('manage_options')) {
-            wp_die(__('Non hai i permessi sufficienti per scaricare questo file.'));
+            wp_die(__('You do not have sufficient permissions to download this file.', 'wp-site-mover'));
         }
 
         $package_id = isset($_GET['package_id']) ? sanitize_text_field($_GET['package_id']) : '';
@@ -331,30 +332,30 @@ class SiteMover_Admin {
         $nonce      = isset($_GET['_wpnonce']) ? sanitize_text_field($_GET['_wpnonce']) : '';
 
         if (!wp_verify_nonce($nonce, 'sitemover_download_' . $package_id)) {
-            wp_die(__('Verifica di sicurezza fallita (nonce non valido).'));
+            wp_die(__('Security check failed. Invalid nonce.', 'wp-site-mover'));
         }
 
         $manifest = SiteMover_Package_Manager::get_manifest($package_id);
         if (!$manifest) {
-            wp_die(__('Pacchetto non trovato.'));
+            wp_die(__('Package not found.', 'wp-site-mover'));
         }
 
         $package_dir = SiteMover_Package_Manager::get_package_dir($package_id);
 
         if ($file_type === 'installer') {
-            $file_path = $package_dir . '/installer.php';
-            $download_name = 'installer.php';
+            $file_path = $package_dir . '/site-installer.php';
+            $download_name = 'site-installer.php';
             $mime = 'application/x-httpd-php';
         } elseif ($file_type === 'zip') {
             $file_path = $package_dir . '/' . $manifest['archive_filename'];
             $download_name = $manifest['archive_filename'];
             $mime = 'application/zip';
         } else {
-            wp_die(__('Tipo di file non valido.'));
+            wp_die(__('Invalid file type.', 'wp-site-mover'));
         }
 
         if (!file_exists($file_path) || !is_readable($file_path)) {
-            wp_die(__('File non trovato sul server.'));
+            wp_die(__('File not found on server.', 'wp-site-mover'));
         }
 
         // Clean any output buffer

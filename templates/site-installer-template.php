@@ -2,17 +2,25 @@
 /**
  * SiteMover Standalone Restoration Installer
  * Auto-generated single-file installer script.
+ * Generated filename: site-installer.php
  */
 
 // Disable memory limit restrictions if permitted
 @ini_set('memory_limit', '512M');
 @set_time_limit(300);
 
+// Minimal translation fallback for standalone usage (no WordPress loaded)
+if (!function_exists('__')) {
+    function __($text, $domain = 'wp-site-mover') {
+        return $text;
+    }
+}
+
 // Manifest configuration placeholder (injected at package creation)
 $manifest = json_decode('{{SITEMOVER_MANIFEST_JSON}}', true);
 
 // =========================================================================
-// AJAX ENDPOINTS HANDLER (Executed when POST request is sent to installer.php)
+// AJAX ENDPOINTS HANDLER (Executed when POST request is sent to site-installer.php)
 // =========================================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     header('Content-Type: application/json; charset=utf-8');
@@ -22,24 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'check_requirements') {
         $checks = array(
             'php_version' => array(
-                'label'   => 'Versione PHP (>= 7.4)',
+                'label'   => __('PHP Version (>= 7.4)', 'wp-site-mover'),
                 'pass'    => version_compare(PHP_VERSION, '7.4.0', '>='),
-                'details' => 'Versione corrente: ' . PHP_VERSION,
+                'details' => sprintf(__('Current version: %s', 'wp-site-mover'), PHP_VERSION),
             ),
             'mysqli' => array(
-                'label'   => 'Estensione MySQLi',
+                'label'   => __('MySQLi Extension', 'wp-site-mover'),
                 'pass'    => extension_loaded('mysqli'),
-                'details' => extension_loaded('mysqli') ? 'Disponibile' : 'Mancante',
+                'details' => extension_loaded('mysqli') ? __('Available', 'wp-site-mover') : __('Missing', 'wp-site-mover'),
             ),
             'zip' => array(
-                'label'   => 'Estensione ZipArchive / Zlib',
+                'label'   => __('ZipArchive / Zlib Extension', 'wp-site-mover'),
                 'pass'    => class_exists('ZipArchive'),
-                'details' => class_exists('ZipArchive') ? 'Disponibile' : 'Mancante',
+                'details' => class_exists('ZipArchive') ? __('Available', 'wp-site-mover') : __('Missing', 'wp-site-mover'),
             ),
             'writable' => array(
-                'label'   => 'Permessi Scrittura Root Server',
+                'label'   => __('Root Server Write Permissions', 'wp-site-mover'),
                 'pass'    => is_writable(__DIR__),
-                'details' => is_writable(__DIR__) ? 'Scrivibile' : 'Non Scrivibile',
+                'details' => is_writable(__DIR__) ? __('Writable', 'wp-site-mover') : __('Not Writable', 'wp-site-mover'),
             ),
         );
 
@@ -47,9 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $archive_exists = file_exists(__DIR__ . '/' . $archive_file);
 
         $checks['archive'] = array(
-            'label'   => "Presenza Archivio ({$archive_file})",
+            'label'   => sprintf(__('Archive Presence (%s)', 'wp-site-mover'), $archive_file),
             'pass'    => $archive_exists,
-            'details' => $archive_exists ? 'Trovato' : 'Non trovato nella directory corrente',
+            'details' => $archive_exists ? __('Found', 'wp-site-mover') : __('Not found in current directory', 'wp-site-mover'),
         );
 
         $all_passed = true;
@@ -73,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $conn = @mysqli_connect($host, $user, $pass);
         if (!$conn) {
-            echo json_encode(array('success' => false, 'message' => 'Impossibile connettersi a MySQL: ' . mysqli_connect_error()));
+            echo json_encode(array('success' => false, 'message' => sprintf(__('Unable to connect to MySQL: %s', 'wp-site-mover'), mysqli_connect_error())));
             exit;
         }
 
@@ -82,19 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             // Try to create DB if it doesn't exist
             $created = @mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS `" . mysqli_real_escape_string($conn, $name) . "` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             if (!$created) {
-                echo json_encode(array('success' => false, 'message' => "Database '{$name}' non trovato e impossibile crearlo: " . mysqli_error($conn)));
+                echo json_encode(array('success' => false, 'message' => sprintf(__("Database '%s' not found and cannot be created: %s", 'wp-site-mover'), $name, mysqli_error($conn))));
                 exit;
             }
         }
 
-        echo json_encode(array('success' => true, 'message' => 'Connessione al database riuscita!'));
+        echo json_encode(array('success' => true, 'message' => __('Database connection successful!', 'wp-site-mover')));
         exit;
     }
 
     if ($action === 'unzip_archive') {
         $archive_file = __DIR__ . '/' . $manifest['archive_filename'];
         if (!file_exists($archive_file)) {
-            echo json_encode(array('success' => false, 'message' => 'File archivio ZIP non trovato.'));
+            echo json_encode(array('success' => false, 'message' => __('ZIP archive file not found.', 'wp-site-mover')));
             exit;
         }
 
@@ -102,9 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if ($zip->open($archive_file) === true) {
             $zip->extractTo(__DIR__);
             $zip->close();
-            echo json_encode(array('success' => true, 'message' => 'Estrazione archivio completata con successo!'));
+            echo json_encode(array('success' => true, 'message' => __('Archive extraction completed successfully!', 'wp-site-mover')));
         } else {
-            echo json_encode(array('success' => false, 'message' => 'Impossibile aprire ed estrarre il file ZIP.'));
+            echo json_encode(array('success' => false, 'message' => __('Unable to open and extract the ZIP file.', 'wp-site-mover')));
         }
         exit;
     }
@@ -119,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $conn = @mysqli_connect($host, $user, $pass, $name);
         if (!$conn) {
-            echo json_encode(array('success' => false, 'message' => 'Connessione al database fallita.'));
+            echo json_encode(array('success' => false, 'message' => __('Database connection failed.', 'wp-site-mover')));
             exit;
         }
 
@@ -150,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         // 3. Update or Rewrite wp-config.php
         sitemover_update_wp_config($host, $name, $user, $pass, $manifest['db_prefix']);
 
-        echo json_encode(array('success' => true, 'message' => 'Ripristino database e riconfigurazione del sito completati!'));
+        echo json_encode(array('success' => true, 'message' => __('Database restoration and site configuration completed!', 'wp-site-mover')));
         exit;
     }
 
@@ -165,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             @unlink(__FILE__);
         });
 
-        echo json_encode(array('success' => true, 'message' => 'Pulizia completata. Il tuo nuovo sito è pronto!'));
+        echo json_encode(array('success' => true, 'message' => __('Cleanup completed. Your new site is ready!', 'wp-site-mover')));
         exit;
     }
 }
@@ -294,11 +302,11 @@ function sitemover_update_wp_config($host, $name, $user, $pass, $prefix) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SiteMover Installer - Ripristino & Migrazione</title>
+    <title><?php _e('SiteMover Installer - Restoration & Migration', 'wp-site-mover'); ?></title>
     <style>
         {{SITEMOVER_INSTALLER_CSS}}
     </style>
@@ -306,105 +314,105 @@ function sitemover_update_wp_config($host, $name, $user, $pass, $prefix) {
 <body>
     <div class="installer-container">
         <div class="installer-header">
-            <h1>SiteMover Standalone Installer</h1>
-            <p>Procedura guidata per il ripristino e la migrazione del sito</p>
+            <h1><?php _e('SiteMover Standalone Installer', 'wp-site-mover'); ?></h1>
+            <p><?php _e('Guided procedure for site restoration and migration', 'wp-site-mover'); ?></p>
         </div>
 
         <!-- STEP WIZARD NAV -->
         <div class="wizard-steps">
-            <div class="wizard-step active" id="wstep-1">1. Requisiti</div>
-            <div class="wizard-step" id="wstep-2">2. Database</div>
-            <div class="wizard-step" id="wstep-3">3. Estrazione</div>
-            <div class="wizard-step" id="wstep-4">4. Configurazione</div>
-            <div class="wizard-step" id="wstep-5">5. Completato</div>
+            <div class="wizard-step active" id="wstep-1"><?php _e('1. Requirements', 'wp-site-mover'); ?></div>
+            <div class="wizard-step" id="wstep-2"><?php _e('2. Database', 'wp-site-mover'); ?></div>
+            <div class="wizard-step" id="wstep-3"><?php _e('3. Extraction', 'wp-site-mover'); ?></div>
+            <div class="wizard-step" id="wstep-4"><?php _e('4. Configuration', 'wp-site-mover'); ?></div>
+            <div class="wizard-step" id="wstep-5"><?php _e('5. Completed', 'wp-site-mover'); ?></div>
         </div>
 
         <div class="installer-card">
             <!-- STEP 1: System Requirements -->
             <div class="step-panel active" id="panel-step-1">
-                <h2>1. Verifica Requisiti di Sistema</h2>
-                <p>Analisi della configurazione dell'hosting bersaglio per garantire il corretto funzionamento:</p>
+                <h2><?php _e('1. System Requirements Check', 'wp-site-mover'); ?></h2>
+                <p><?php _e('Analysis of the target hosting configuration to ensure proper operation:', 'wp-site-mover'); ?></p>
                 <div id="requirements-list" class="req-list">
-                    <div class="loading">Verifica requisiti in corso...</div>
+                    <div class="loading"><?php _e('Checking requirements in progress...', 'wp-site-mover'); ?></div>
                 </div>
                 <div class="panel-actions">
-                    <button type="button" class="btn btn-primary" id="btn-to-step-2" disabled>Avanti: Configura Database &rarr;</button>
+                    <button type="button" class="btn btn-primary" id="btn-to-step-2" disabled><?php _e('Next: Database Configuration', 'wp-site-mover'); ?> &rarr;</button>
                 </div>
             </div>
 
             <!-- STEP 2: Database Configuration -->
             <div class="step-panel" id="panel-step-2">
-                <h2>2. Configurazione Database</h2>
-                <p>Inserisci i dati di connessione al database del tuo nuovo hosting:</p>
+                <h2><?php _e('2. Database Configuration', 'wp-site-mover'); ?></h2>
+                <p><?php _e('Enter the database connection details of your new hosting:', 'wp-site-mover'); ?></p>
                 <form id="db-config-form">
                     <div class="form-group">
-                        <label>Host Database:</label>
+                        <label><?php _e('Database Host:', 'wp-site-mover'); ?></label>
                         <input type="text" id="db_host" value="localhost" required>
                     </div>
                     <div class="form-group">
-                        <label>Nome Database:</label>
-                        <input type="text" id="db_name" required placeholder="es. my_new_wp_db">
+                        <label><?php _e('Database Name:', 'wp-site-mover'); ?></label>
+                        <input type="text" id="db_name" required placeholder="<?php _e('e.g. my_new_wp_db', 'wp-site-mover'); ?>">
                     </div>
                     <div class="form-group">
-                        <label>Utente Database:</label>
-                        <input type="text" id="db_user" required placeholder="es. db_user">
+                        <label><?php _e('Database User:', 'wp-site-mover'); ?></label>
+                        <input type="text" id="db_user" required placeholder="<?php _e('e.g. db_user', 'wp-site-mover'); ?>">
                     </div>
                     <div class="form-group">
-                        <label>Password Database:</label>
-                        <input type="password" id="db_pass" placeholder="Password MySQL">
+                        <label><?php _e('Database Password:', 'wp-site-mover'); ?></label>
+                        <input type="password" id="db_pass" placeholder="<?php _e('MySQL Password', 'wp-site-mover'); ?>">
                     </div>
                     <div class="form-group">
-                        <label>Prefisso Tabelle Originario:</label>
+                        <label><?php _e('Original Table Prefix:', 'wp-site-mover'); ?></label>
                         <input type="text" id="db_prefix" value="<?php echo esc_attr($manifest['db_prefix']); ?>" readonly>
                     </div>
                 </form>
                 <div id="db-test-msg" class="msg-box"></div>
                 <div class="panel-actions">
-                    <button type="button" class="btn btn-secondary" id="btn-test-db">Test Connessione DB</button>
-                    <button type="button" class="btn btn-primary" id="btn-to-step-3" disabled>Avanti: Estrai File &rarr;</button>
+                    <button type="button" class="btn btn-secondary" id="btn-test-db"><?php _e('Test DB Connection', 'wp-site-mover'); ?></button>
+                    <button type="button" class="btn btn-primary" id="btn-to-step-3" disabled><?php _e('Next: Extract Files', 'wp-site-mover'); ?> &rarr;</button>
                 </div>
             </div>
 
             <!-- STEP 3: Unzip Archive -->
             <div class="step-panel" id="panel-step-3">
-                <h2>3. Estrazione Archivio Sito</h2>
-                <p>Estrazione dei file dall'archivio <code><?php echo esc_html($manifest['archive_filename']); ?></code>...</p>
+                <h2><?php _e('3. Site Archive Extraction', 'wp-site-mover'); ?></h2>
+                <p><?php printf(__('Extracting files from archive %s...', 'wp-site-mover'), esc_html($manifest['archive_filename'])); ?></p>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" id="unzip-progress" style="width: 0%;"></div>
                 </div>
-                <div id="unzip-status-msg" class="msg-box">In attesa di avvio...</div>
+                <div id="unzip-status-msg" class="msg-box"><?php _e('Waiting to start...', 'wp-site-mover'); ?></div>
                 <div class="panel-actions">
-                    <button type="button" class="btn btn-primary" id="btn-start-unzip">Avvia Estrazione File</button>
+                    <button type="button" class="btn btn-primary" id="btn-start-unzip"><?php _e('Start File Extraction', 'wp-site-mover'); ?></button>
                 </div>
             </div>
 
             <!-- STEP 4: DB Import & Search Replace -->
             <div class="step-panel" id="panel-step-4">
-                <h2>4. Ripristino DB & Configurazione URL</h2>
-                <p>Verifica l'URL del nuovo sito per l'aggiornamento automatico nel database:</p>
+                <h2><?php _e('4. DB Restoration & URL Configuration', 'wp-site-mover'); ?></h2>
+                <p><?php _e('Verify the new site URL for automatic database update:', 'wp-site-mover'); ?></p>
                 <div class="form-group">
-                    <label>URL Vecchio Sito (Sorgente):</label>
+                    <label><?php _e('Old Site URL (Source):', 'wp-site-mover'); ?></label>
                     <input type="text" value="<?php echo esc_attr($manifest['site_url']); ?>" readonly>
                 </div>
                 <div class="form-group">
-                    <label>URL Nuovo Sito (Destinazione):</label>
+                    <label><?php _e('New Site URL (Destination):', 'wp-site-mover'); ?></label>
                     <input type="text" id="new_site_url" value="<?php echo 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST']; ?>">
                 </div>
                 <div id="import-status-msg" class="msg-box"></div>
                 <div class="panel-actions">
-                    <button type="button" class="btn btn-primary" id="btn-run-import">Esegui Ripristino DB & Sostituzione URL</button>
+                    <button type="button" class="btn btn-primary" id="btn-run-import"><?php _e('Execute DB Restoration & URL Replacement', 'wp-site-mover'); ?></button>
                 </div>
             </div>
 
             <!-- STEP 5: Finalization -->
             <div class="step-panel" id="panel-step-5">
-                <h2>5. Migrazione Completata!</h2>
-                <p class="success-text">🎉 Il tuo sito WordPress è stato ripristinato con successo!</p>
+                <h2><?php _e('5. Migration Completed!', 'wp-site-mover'); ?></h2>
+                <p class="success-text">🎉 <?php _e('Your WordPress site has been successfully restored!', 'wp-site-mover'); ?></p>
                 <div class="info-box">
-                    <p>Fai clic sul pulsante sottostante per eliminare i file di installazione temporanei per sicurezza.</p>
+                    <p><?php _e('Click the button below to delete temporary installation files for security.', 'wp-site-mover'); ?></p>
                 </div>
                 <div class="panel-actions">
-                    <button type="button" class="btn btn-success" id="btn-cleanup-site">Completa & Pulisci File Installer</button>
+                    <button type="button" class="btn btn-success" id="btn-cleanup-site"><?php _e('Complete & Clean Installer Files', 'wp-site-mover'); ?></button>
                 </div>
             </div>
         </div>

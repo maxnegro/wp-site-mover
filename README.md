@@ -1,6 +1,6 @@
-# SiteMover - WordPress Backup, Migration & Cloning Plugin
+# WP SiteMover - WordPress Backup, Migration & Cloning Plugin
 
-**SiteMover** è un plugin professionale per WordPress ideato per il backup completo, la migrazione a zero downtime e il clonaggio/ripristino di siti WordPress di qualsiasi dimensione (compresi siti complessi con file pesanti >1GB e dimensioni complessive >20GB).
+**WP SiteMover** è un plugin professionale per WordPress ideato per il backup completo, la migrazione a zero downtime e il clonaggio/ripristino di siti WordPress di qualsiasi dimensione (compresi siti complessi con file pesanti >1GB e dimensioni complessive >20GB).
 
 ---
 
@@ -35,14 +35,14 @@ SiteMover risolve questi limiti attraverso tre pilastri architetturali:
 
 ## 2. Componenti del Sistema
 
-### 2.1 Plugin WordPress (`site-mover.php` e moduli `includes/`)
+### 2.1 Plugin WordPress (`wp-site-mover.php` e moduli `includes/`)
 - **`SiteMover_Admin`**: Interfaccia di amministrazione moderna ed intuitiva per configurare, avviare e gestire i pacchetti.
 - **`SiteMover_DB_Exporter`**: Esportatore MySQL ottimizzato che legge le tabelle a blocchi (batching) e scrive direttamente in streaming nel file `.sql` senza saturare la RAM.
 - **`SiteMover_Archive_Builder`**: Generatore di archivi ZIP basato su iteratori a bassa memoria (`DirectoryIterator` + `ZipArchive`) con supporto al frazionamento/chunking e all'esclusione di directory di cache/log/temp.
 - **`SiteMover_Package_Manager`**: Gestisce lo storage dei pacchetti (`wp-content/uploads/site-mover-packages/`), la sicurezza con file `.htaccess`/`index.php` e la generazione del `manifest.json`.
 
-### 2.2 Installer Indipendente (`installer.php`)
-Lo script `installer.php` è un'applicazione PHP standalone (autonoma) con interfaccia web AJAX a 5 fasi:
+### 2.2 Installer Indipendente (`site-installer.php`)
+Lo script `site-installer.php` è un'applicazione PHP standalone (autonoma) con interfaccia web AJAX a 5 fasi:
 1. **Requisiti di Sistema**: Verifica versione PHP (7.4+ / 8.x), estensioni necessarie (`mysqli`, `zip`, `zlib`, `json`), permessi di scrittura e spazio disco.
 2. **Database Config**: Inserimento credenziali MySQL del nuovo hosting, verifica connessione e creazione database/tabelle.
 3. **Estrazione Pacchetto**: Decompressione incrementale a blocchi (batch unzipping) dell'archivio `.zip` direttamente nella root del server.
@@ -50,7 +50,7 @@ Lo script `installer.php` è un'applicazione PHP standalone (autonoma) con inter
    - Sostituzione profonda di Old URL -> New URL e Old Path -> New Path.
    - Algoritmo di ricorsione sui dati serializzati (PHP `unserialize` / regex fix / `serialize` ricorsivo) per garantire la validità delle lunghezze delle stringhe `s:N:"..."`.
    - Aggiornamento / rigenerazione di `wp-config.php` (credenziali DB, prefisso tabelle, chiavi di protezione salate).
-5. **Completamento & Pulizia**: Rimozione automatica o manuale di `installer.php`, `archive.zip` e file temporanei di installazione per prevenire falle di sicurezza.
+5. **Completamento & Pulizia**: Rimozione automatica o manuale di `site-installer.php`, `archive.zip` e file temporanei di installazione per prevenire falle di sicurezza.
 
 ---
 
@@ -83,8 +83,21 @@ SiteMover implementa un engine di **Recursive Serialized Engine**:
 
 ---
 
+## 6. Internazionalizzazione (i18n)
+
+Il plugin è completamente predisposto per le traduzioni secondo le best practice WordPress:
+- Text domain: `wp-site-mover`
+- File `.pot` template in `languages/wp-site-mover.pot`
+- Traduzioni italiane (`it_IT`) e inglesi (`en_US`) incluse in `languages/`
+- Supporto per le stringhe JavaScript via `wp.i18n` e JSON generati con `wp i18n make-json`
+
+Per contribuire con nuove traduzioni, utilizzare Poedit o Loco Translate sui file `.po` nella cartella `languages/`.
+
+---
+
 ## 5. Sicurezza e Protezione
 
 - **Token di Autenticazione Pacchetto**: Ogni archivio e il rispettivo installer contengono un hash crittografico unico (`archive_key`). L'installer richiede la chiave prima di eseguire la sovrascrittura o l'importazione.
 - **Protezione Directory dei Backup**: I pacchetti salvati sul server sorgente sono protetti tramite `.htaccess` (`Deny from all`) e file `index.php` vuoti per prevenire il download non autorizzato via URL diretto.
 - **WP Nonce & Capability Checks**: Tutti gli endpoint AJAX del plugin verificano le autorizzazioni dell'utente (`manage_options`) e i token anti-CSRF (`check_ajax_referral`).
+- **Auto-rimozione Installer**: Al termine della migrazione, `site-installer.php` può essere automaticamente rimosso per evitare esposizioni post-installazione.

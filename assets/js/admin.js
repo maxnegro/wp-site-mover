@@ -1,6 +1,20 @@
 jQuery(document).ready(function($) {
     var packageId = '';
 
+    function __(text, domain) {
+        if (typeof wp !== 'undefined' && wp.i18n && wp.i18n.__) {
+            return wp.i18n.__(text, domain || 'wp-site-mover');
+        }
+        return text;
+    }
+
+    function sprintf(text, domain) {
+        if (typeof wp !== 'undefined' && wp.i18n && wp.i18n.sprintf) {
+            return wp.i18n.sprintf(text, domain || 'wp-site-mover');
+        }
+        return text;
+    }
+
     function logMsg(msg) {
         var box = $('#sitemover-log-box');
         box.append('<div>[' + new Date().toLocaleTimeString() + '] ' + msg + '</div>');
@@ -34,7 +48,7 @@ jQuery(document).ready(function($) {
         $('#sitemover-log-box').empty();
 
         setStep('step-init', 'active');
-        updateProgress(5, 'Inizializzazione sessione di backup...');
+        updateProgress(5, __('Initialization backup session...', 'wp-site-mover'));
 
         // Step 1: Init Package
         $.post(SiteMoverVars.ajax_url, {
@@ -42,14 +56,14 @@ jQuery(document).ready(function($) {
             nonce: SiteMoverVars.nonce
         }, function(res) {
             if (!res.success) {
-                alert('Errore: ' + (res.data ? res.data.message : 'Inizializzazione fallita'));
+                alert(__('Error: ', 'wp-site-mover') + (res.data ? res.data.message : __('Initialization failed', 'wp-site-mover')));
                 return;
             }
 
             packageId = res.data.package_id;
             setStep('step-init', 'completed');
             setStep('step-db', 'active');
-            updateProgress(15, 'Pacchetto creato (' + packageId + '). Avvio dump DB...');
+            updateProgress(15, sprintf(__('Package created (%s). Starting DB dump...', 'wp-site-mover'), packageId));
 
             // Proceed to Step 2: DB Chunk
             runDbDumpChunk();
@@ -64,7 +78,7 @@ jQuery(document).ready(function($) {
             package_id: packageId
         }, function(res) {
             if (!res.success) {
-                alert('Errore Dump Database: ' + res.data.message);
+                alert(__('Database Dump Error: ', 'wp-site-mover') + res.data.message);
                 return;
             }
 
@@ -89,7 +103,7 @@ jQuery(document).ready(function($) {
             package_id: packageId
         }, function(res) {
             if (!res.success) {
-                alert('Errore Scansione File: ' + res.data.message);
+                alert(__('File Scan Error: ', 'wp-site-mover') + res.data.message);
                 return;
             }
 
@@ -109,7 +123,7 @@ jQuery(document).ready(function($) {
             package_id: packageId
         }, function(res) {
             if (!res.success) {
-                alert('Errore Archiviazione ZIP: ' + res.data.message);
+                alert(__('ZIP Archiving Error: ', 'wp-site-mover') + res.data.message);
                 return;
             }
 
@@ -134,7 +148,7 @@ jQuery(document).ready(function($) {
             package_id: packageId
         }, function(res) {
             if (!res.success) {
-                alert('Errore Finalizzazione: ' + res.data.message);
+                alert(__('Finalization Error: ', 'wp-site-mover') + res.data.message);
                 return;
             }
 
@@ -152,7 +166,7 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         var id = $(this).data('id');
 
-        if (!confirm('Sei sicuro di voler eliminare il pacchetto ' + id + '?')) {
+        if (!confirm(sprintf(__('Are you sure you want to delete package %s?', 'wp-site-mover'), id))) {
             return;
         }
 

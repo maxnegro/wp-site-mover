@@ -6,13 +6,13 @@ if (!defined('ABSPATH')) {
 class SiteMover_Installer_Generator {
 
     /**
-     * Builds and writes installer.php into package directory.
+     * Builds and writes site-installer.php into package directory.
      */
     public static function create_installer($package_id, $manifest) {
         $package_dir = SiteMover_Package_Manager::get_package_dir($package_id);
-        $installer_file = $package_dir . '/installer.php';
+        $installer_file = $package_dir . '/site-installer.php';
 
-        $template_path = SITEMOVER_PATH . 'templates/installer-template.php';
+        $template_path = SITEMOVER_PATH . 'templates/site-installer-template.php';
         if (!file_exists($template_path)) {
             return false;
         }
