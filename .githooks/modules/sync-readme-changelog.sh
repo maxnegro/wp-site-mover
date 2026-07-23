@@ -63,13 +63,22 @@ if grep -q '^== Upgrade Notice ==' "$README_PATH"; then
     ' "$README_PATH" > "$TMP_UPGRADE"
 fi
 
-# Extract everything after == Changelog == section (after next == ... == header)
-awk -v changelog_marker="== Changelog ==" '
-    BEGIN { found_changelog=0; found_next=0 }
-    $0 == changelog_marker { found_changelog=1; next }
-    found_changelog && !found_next && /^== / { found_next=1; print; next }
-    found_next { print }
-' "$README_PATH" > "$TMP_AFTER"
+# Extract everything after the relevant bottom section
+if [ -s "$TMP_UPGRADE" ]; then
+    awk -v upgrade_marker="== Upgrade Notice ==" '
+        BEGIN { found_upgrade=0; found_next=0 }
+        $0 == upgrade_marker { found_upgrade=1; next }
+        found_upgrade && !found_next && /^== / { found_next=1; print; next }
+        found_next { print }
+    ' "$README_PATH" > "$TMP_AFTER"
+else
+    awk -v changelog_marker="== Changelog ==" '
+        BEGIN { found_changelog=0; found_next=0 }
+        $0 == changelog_marker { found_changelog=1; next }
+        found_changelog && !found_next && /^== / { found_next=1; print; next }
+        found_next { print }
+    ' "$README_PATH" > "$TMP_AFTER"
+fi
 
 # Build new Upgrade Notice section: new version first, deduplicated, then existing ones
 UPGRADE_ENTRY="= ${VERSION_NAME} =
