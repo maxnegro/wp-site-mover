@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+
+SCRIPT_PATH="$0"; while [ -h "$SCRIPT_PATH" ]; do SCRIPT_PATH=$(readlink "$SCRIPT_PATH"); done
+. "$(dirname "$SCRIPT_PATH")/modules/functions.sh"
+
+. "$HOOKS_DIR/modules/bump-version.sh" release
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+echo "$VERSION"
+exit 0

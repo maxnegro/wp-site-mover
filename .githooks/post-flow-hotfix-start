@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+ORIGIN=$2
+BRANCH=$3
+BASE=$4
+
+SCRIPT_PATH="$0"; while [ -h "$SCRIPT_PATH" ]; do SCRIPT_PATH=$(readlink "$SCRIPT_PATH"); done
+. "$(dirname "$SCRIPT_PATH")/modules/functions.sh"
+
+. "$HOOKS_DIR/modules/write-version.sh"
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+. "$HOOKS_DIR/modules/update-changelog.sh"
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+. "$HOOKS_DIR/modules/sync-readme-changelog.sh"
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+exit 0

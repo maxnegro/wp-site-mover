@@ -39,6 +39,3 @@ Thumbs.db
 
 # WordPress plugin translations (generated from .po)
 languages/*.mo
-
-# Git Flow hooks
-.githooks/
