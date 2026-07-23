@@ -260,7 +260,7 @@ class SiteMover_Admin {
             'next_index'   => $res['next_index'],
             'total_files'  => $total_files,
             'progress_pct' => $pct,
-            'message'      => "Zippatura in corso: {$res['next_index']}/{$total_files} file ({$pct}%)...",
+            'message'      => "Compressione in corso: {$res['next_index']}/{$total_files} file ({$pct}%)...",
         ));
     }
 
