@@ -22,7 +22,7 @@ if [ ! -f "$README_PATH" ]; then
     return 1
 fi
 
-# Extract changelog section for current version from CHANGELOG.md
+# Extract ONLY the current version section from CHANGELOG.md
 CHANGELOG_SECTION=$(awk -v ver="$VERSION_NAME" '
     BEGIN { in_section=0; buf="" }
     /^## \[/ {
@@ -43,11 +43,47 @@ if [ -z "$CHANGELOG_SECTION" ]; then
     return 1
 fi
 
+# Normalize blank lines: collapse multiple empty lines into one
+CHANGELOG_SECTION=$(printf '%s\n' "$CHANGELOG_SECTION" | sed '/^$/N;/^\n$/D')
+
 TMP_BEFORE=$(mktemp)
 TMP_AFTER=$(mktemp)
+TMP_UPGRADE=$(mktemp)
 
+# Extract everything before == Changelog == section
 awk '/^== Changelog ==/ { exit } { print }' "$README_PATH" > "$TMP_BEFORE"
-awk '/^== Changelog ==/ { found=1; next } found && /^== / { exit } { print }' "$README_PATH" > "$TMP_AFTER"
+
+# Extract existing Upgrade Notice section if present
+if grep -q '^== Upgrade Notice ==' "$README_PATH"; then
+    awk -v upgrade_marker="== Upgrade Notice ==" '
+        BEGIN { found_upgrade=0 }
+        $0 == upgrade_marker { found_upgrade=1; next }
+        found_upgrade && /^== / { exit }
+        found_upgrade { print }
+    ' "$README_PATH" > "$TMP_UPGRADE"
+fi
+
+# Extract everything after == Changelog == section (after next == ... == header)
+awk -v changelog_marker="== Changelog ==" '
+    BEGIN { found_changelog=0; found_next=0 }
+    $0 == changelog_marker { found_changelog=1; next }
+    found_changelog && !found_next && /^== / { found_next=1; print; next }
+    found_next { print }
+' "$README_PATH" > "$TMP_AFTER"
+
+# Build new Upgrade Notice section: new version first, then existing ones
+UPGRADE_ENTRY="= ${VERSION_NAME} =
+TODO: write upgrade notice for ${VERSION_NAME}."
+UPGRADE_SECTION="$UPGRADE_ENTRY"
+
+if [ -s "$TMP_UPGRADE" ]; then
+    UPGRADE_SECTION="${UPGRADE_SECTION}
+
+$(cat "$TMP_UPGRADE")"
+fi
+
+# Remove trailing empty lines from upgrade section
+UPGRADE_SECTION=$(printf '%s\n' "$UPGRADE_SECTION" | sed '/^$/N;/^\n$/D')
 
 {
     cat "$TMP_BEFORE"
@@ -55,11 +91,14 @@ awk '/^== Changelog ==/ { found=1; next } found && /^== / { exit } { print }' "$
     printf '== Changelog ==\n\n'
     printf '%s\n' "$CHANGELOG_SECTION"
     printf '\n'
+    printf '== Upgrade Notice ==\n\n'
+    printf '%s\n' "$UPGRADE_SECTION"
+    printf '\n'
     cat "$TMP_AFTER"
 } > "$README_PATH"
 
-rm -f "$TMP_BEFORE" "$TMP_AFTER"
+rm -f "$TMP_BEFORE" "$TMP_AFTER" "$TMP_UPGRADE"
 git add "$README_PATH"
 
-echo "readme.txt sincronizzato con il changelog di $VERSION_NAME"
+echo "readme.txt sincronizzato con il changelog completo di $VERSION_NAME"
 return 0
